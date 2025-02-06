@@ -88,6 +88,26 @@ return {
 					},
 				})
 			end,
+			["clangd"] = function()
+				lspconfig["clangd"].setup({
+					cmd = {
+						"clangd",
+						"--clang-tidy",
+						"--header-insertion=iwyu",
+						"--completion-style=detailed",
+						"--fallback-style=none",
+						"--function-arg-placeholders=false",
+					},
+					on_attach = function(_, bufnr)
+						vim.keymap.set(
+							"n",
+							"<leader>co",
+							"<cmd>ClangdSwitchSourceHeader<cr>",
+							{ desc = "Got to other file", buffer = bufnr }
+						)
+					end,
+				})
+			end,
 		})
 	end,
 }
