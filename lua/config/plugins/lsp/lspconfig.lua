@@ -3,7 +3,7 @@ return {
 	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
 		{ "antosha417/nvim-lsp-file-operations", config = true },
-		{ "folke/neodev.nvim", opts = {} },
+		"hrsh7th/cmp-nvim-lsp", -- source for lsp
 	},
 	config = function()
 		-- import lspconfig plugin
@@ -67,14 +67,19 @@ return {
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 		end
 
+		local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
 		mason_lspconfig.setup_handlers({
 			-- default handler for installed servers
 			function(server_name)
-				lspconfig[server_name].setup({})
+				lspconfig[server_name].setup({
+					capabilities = capabilities,
+				})
 			end,
 			["lua_ls"] = function()
 				-- configure lua server (with special settings)
 				lspconfig["lua_ls"].setup({
+					capabilities = capabilities,
 					settings = {
 						Lua = {
 							-- make the language server recognize "vim" global
@@ -90,6 +95,7 @@ return {
 			end,
 			["clangd"] = function()
 				lspconfig["clangd"].setup({
+					capabilities = capabilities,
 					cmd = {
 						"clangd",
 						"--clang-tidy",
