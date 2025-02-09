@@ -4,6 +4,7 @@ return {
 	dependencies = {
 		{ "antosha417/nvim-lsp-file-operations", config = true },
 		"hrsh7th/cmp-nvim-lsp", -- source for lsp
+		"p00f/clangd_extensions.nvim",
 	},
 	config = function()
 		-- import lspconfig plugin
@@ -98,18 +99,24 @@ return {
 					capabilities = capabilities,
 					cmd = {
 						"clangd",
+						"--background-index",
 						"--clang-tidy",
 						"--header-insertion=iwyu",
 						"--completion-style=detailed",
-						"--fallback-style=none",
+						"--fallback-style=llvm",
 						"--function-arg-placeholders=false",
+					},
+					init_options = {
+						usePlaceholders = true,
+						completeUnimported = true,
+						clangdFileStatus = true,
 					},
 					on_attach = function(_, bufnr)
 						vim.keymap.set(
 							"n",
-							"<leader>co",
+							"<leader>ch",
 							"<cmd>ClangdSwitchSourceHeader<cr>",
-							{ desc = "Got to other file", buffer = bufnr }
+							{ desc = "Switch Source/Header", buffer = bufnr }
 						)
 					end,
 				})
