@@ -20,56 +20,55 @@ keymap.set("n", "<leader>+", "<C-a>", { desc = "Increment number" }) -- incremen
 keymap.set("n", "<leader>-", "<C-x>", { desc = "Decrement number" }) -- decrement
 
 -- window management
-keymap.set("n", "<leader>wv", "<C-w>v", { desc = "Split window vertically" })     -- split window vertically
-keymap.set("n", "<leader>wh", "<C-w>s", { desc = "Split window horizontally" })   -- split window horizontally
-keymap.set("n", "<leader>we", "<C-w>=", { desc = "Make splits equal size" })      -- make split windows equal width & height
+keymap.set("n", "<leader>wv", "<C-w>v", { desc = "Split window vertically" }) -- split window vertically
+keymap.set("n", "<leader>wh", "<C-w>s", { desc = "Split window horizontally" }) -- split window horizontally
+keymap.set("n", "<leader>we", "<C-w>=", { desc = "Make splits equal size" }) -- make split windows equal width & height
 keymap.set("n", "<leader>wx", "<cmd>close<CR>", { desc = "Close current split" }) -- close current split window
 
 local function close_other_windows()
-  local current_win = vim.api.nvim_get_current_win()
-  local wins = vim.api.nvim_list_wins()
+	local current_win = vim.api.nvim_get_current_win()
+	local wins = vim.api.nvim_list_wins()
 
-  for _, win in ipairs(wins) do
-    if win ~= current_win then
-      vim.api.nvim_win_close(win, false)
-    end
-  end
+	for _, win in ipairs(wins) do
+		if win ~= current_win then
+			vim.api.nvim_win_close(win, false)
+		end
+	end
 end
 vim.api.nvim_create_user_command("CloseOtherWindows", close_other_windows, {})
 keymap.set("n", "<leader>wo", "<cmd>CloseOtherWindows<CR>", { desc = "Close other windows" })
 
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "cpp", "cpp_test" },  -- Only enable for cpp and test files
-  callback = function()
-    vim.keymap.set("n", "<leader>ct", function()
-      local file = vim.fn.expand("%:p") -- Get full file path
-      local base_name = file:gsub("%.cpp$", ""):gsub("_test%.cpp$", "")
-      local test_file = base_name .. "_test.cpp"
-      local source_file = base_name .. ".cpp"
+	pattern = { "cpp", "cpp_test" }, -- Only enable for cpp and test files
+	callback = function()
+		vim.keymap.set("n", "<leader>ct", function()
+			local file = vim.fn.expand("%:p") -- Get full file path
+			local base_name = file:gsub("_test%.cpp$", ""):gsub("%.cpp$", "")
+			local test_file = base_name .. "_test.cpp"
+			local source_file = base_name .. ".cpp"
 
-      if file:match("_test%.cpp$") then
-        -- If we're in a test file, jump to the source file
-        if vim.fn.filereadable(source_file) == 1 then
-          vim.cmd("edit " .. source_file)
-        else
-          print("Source file not found: " .. source_file)
-        end
-      else
-        -- If we're in a source file, jump to the test file
-        if vim.fn.filereadable(test_file) == 1 then
-          vim.cmd("edit " .. test_file)
-        else
-          local choice = vim.fn.input("Test file not found. Create it? (y/n) ")
-          if choice:lower() == "y" then
-            vim.fn.writefile({}, test_file) -- Create an empty file
-            vim.cmd("edit " .. test_file)   -- Open the file
-            print("Created test file: " .. test_file)
-          else
-            print("Cancelled: Test file not created.")
-          end
-        end
-      end
-    end, { buffer = true, desc = "Toggle between source and test file" })
-  end,
+			if file:match("_test%.cpp$") then
+				-- If we're in a test file, jump to the source file
+				if vim.fn.filereadable(source_file) == 1 then
+					vim.cmd("edit " .. source_file)
+				else
+					print("Source file not found: " .. source_file)
+				end
+			else
+				-- If we're in a source file, jump to the test file
+				if vim.fn.filereadable(test_file) == 1 then
+					vim.cmd("edit " .. test_file)
+				else
+					local choice = vim.fn.input("Test file not found. Create it? (y/n) ")
+					if choice:lower() == "y" then
+						vim.fn.writefile({}, test_file) -- Create an empty file
+						vim.cmd("edit " .. test_file) -- Open the file
+						print("Created test file: " .. test_file)
+					else
+						print("Cancelled: Test file not created.")
+					end
+				end
+			end
+		end, { buffer = true, desc = "Toggle between source and test file" })
+	end,
 })
-
