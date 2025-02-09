@@ -18,25 +18,4 @@ return {
 	{ "echasnovski/mini.operators", version = false, config = true },
 	{ "echasnovski/mini.pairs", version = false, config = true },
 	{ "echasnovski/mini.splitjoin", version = false, config = true },
-	-- { "echasnovski/mini.surround", version = false, config = true },
-
-	-- Snippets
-	{
-		"echasnovski/mini.snippets",
-		version = false,
-		dependencies = { "rafamadriz/friendly-snippets" },
-		config = function()
-			local gen_loader = require("mini.snippets").gen_loader
-			require("mini.snippets").setup({
-				snippets = {
-					-- Load custom file with global snippets first (adjust for Windows)
-					gen_loader.from_file("~/.config/nvim/snippets/global.json"),
-
-					-- Load snippets based on current language by reading files from
-					-- "snippets/" subdirectories from 'runtimepath' directories.
-					gen_loader.from_lang(),
-				},
-			})
-		end,
-	},
 }
