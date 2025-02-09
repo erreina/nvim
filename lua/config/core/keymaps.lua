@@ -38,3 +38,27 @@ end
 vim.api.nvim_create_user_command("CloseOtherWindows", close_other_windows, {})
 keymap.set("n", "<leader>wo", "<cmd>CloseOtherWindows<CR>", { desc = "Close other windows" })
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "cpp", "h", "hpp" },
+  callback = function()
+    vim.keymap.set("n", "<leader>ct", function()
+      local file = vim.fn.expand("%:p") -- Get full file path
+      local base_name = file:gsub("%.hpp$", ""):gsub("%.h$", ""):gsub("%.cpp$", "")
+      local test_file = base_name .. "_test.cpp"
+
+      if vim.fn.filereadable(test_file) == 1 then
+        vim.cmd("edit " .. test_file)
+      else
+        local choice = vim.fn.input("Test file not found. Create it? (y/n) ")
+        if choice:lower() == "y" then
+          vim.fn.writefile({}, test_file) -- Create an empty file
+          vim.cmd("edit " .. test_file)   -- Open the file
+          print("Created test file: " .. test_file)
+        else
+          print("Cancelled: Test file not created.")
+        end
+      end
+    end, { buffer = true, desc = "Jump to test file (or create it)" })
+  end,
+})
+
