@@ -13,7 +13,6 @@ return {
 	{ "echasnovski/mini.ai", version = false, config = true },
 	{ "echasnovski/mini.align", version = false, config = true },
 	{ "echasnovski/mini.comment", version = false, config = true },
-	{ "echasnovski/mini.completion", version = false, config = true },
 	{ "echasnovski/mini.move", version = false, config = true },
 	{ "echasnovski/mini.operators", version = false, config = true },
 	{ "echasnovski/mini.pairs", version = false, config = true },
